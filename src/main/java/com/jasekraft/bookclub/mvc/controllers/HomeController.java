@@ -50,7 +50,7 @@ public class HomeController {
             return "index.jsp";
         }
         session.setAttribute("user_id", newUser.getId());
-        return "redirect:/dashboard";
+        return "redirect:/books";
     }
     
     @PostMapping("/login")
@@ -62,7 +62,7 @@ public class HomeController {
             return "index.jsp";
         }
         session.setAttribute("user_id", user.getId());
-        return "redirect:/dashboard";
+        return "redirect:/books";
     }
     
     @GetMapping("/logout")

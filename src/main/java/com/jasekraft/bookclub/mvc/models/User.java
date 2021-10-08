@@ -1,14 +1,24 @@
 package com.jasekraft.bookclub.mvc.models;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
     
 @Entity
 @Table(name="users")
@@ -17,6 +27,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(updatable=false)
+	@DateTimeFormat(pattern="yyy-MM-dd")
+	private Date createdAt;
+	
+	@DateTimeFormat(pattern="yyy-MM-dd")
+	private Date updatedAt;
     
     @NotEmpty(message="Username is required!")
     @Size(min=3, max=30, message="Username must be between 3 and 30 characters")
@@ -34,6 +51,9 @@ public class User {
     @NotEmpty(message="Confirm Password is required!")
     @Size(min=8, max=128, message="Confirm Password must be between 8 and 128 characters")
     private String confirm;
+    
+    @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
+    private List<Book> books;
   
     public User() {}
 
@@ -43,6 +63,17 @@ public class User {
 
 	public String getUserName() {
 		return userName;
+	}
+	
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = new Date();
+		this.updatedAt = new Date();
+	}
+	
+	@PreUpdate
+	protected void onUpdate() {
+		this.updatedAt = new Date();
 	}
 
 	public void setUserName(String userName) {
@@ -72,8 +103,23 @@ public class User {
 	public void setConfirm(String confirm) {
 		this.confirm = confirm;
 	}
-    
-    // TODO - Don't forget to generate getters and setters
-  
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+
+	public List<Book> getBooks() {
+		return books;
+	}
+
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
+
 }
     

@@ -11,6 +11,8 @@
 </head>
 <body>
     <div class="container w-50">
+    	<h1>Book Club</h1>
+	<p>A place for friends to share their thoughts on books.</p>
     <h2>Register</h2>
     <form:form action="/register" method="post" modelAttribute="newUser">
         <div class="form-group">
