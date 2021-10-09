@@ -72,6 +72,9 @@ public class Book {
 	public Long getId() {
 		return id;
 	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getTitle() {
 		return title;
@@ -115,6 +118,10 @@ public class Book {
 
 	public void setMyThoughts(String myThoughts) {
 		this.myThoughts = myThoughts;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
     

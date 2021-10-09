@@ -27,24 +27,25 @@
 		<a href="/books" class="btn btn-primary">Dashboard</a>
 	</div>
 </div>
-<form:form action="/books/update" method="post" modelAttribute="book" class="form-control">
+<form:form action="/books/update" method="post" modelAttribute="oldbook" class="form-control">
 	<p>
-		<form:input type="hidden" path="id" value="${oldbook.id}" />
+		<form:input type="hidden" path="id" />
+		<form:input type="hidden" path="user" />
 	</p>
     <p>
         <form:label path="title">Title</form:label>
         <form:errors path="title"/>
-        <form:input path="title" value="${oldbook.title }"/>
+        <form:input path="title"/>
     </p>
     <p>
         <form:label path="author">Author</form:label>
         <form:errors path="author"/>
-        <form:textarea path="author" value="${oldbook.author }"/>
+        <form:input path="author" />
     </p>
     <p>
         <form:label path="myThoughts">My Thoughts</form:label>
         <form:errors path="myThoughts"/>
-        <form:textarea path="myThoughts" value="${oldbook.myThoughts }"/>
+        <form:textarea path="myThoughts"></form:textarea>
     </p>
     <input type="submit" value="Save"/>
 </form:form>    

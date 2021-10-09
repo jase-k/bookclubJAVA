@@ -31,26 +31,40 @@ public class BookController {
 	@RequestMapping("/books/{id}")
 	public String showBook(@PathVariable("id") long id,
 			Model model, HttpSession session) {
-		Book book = bookService.findBook(id);
-		model.addAttribute("book", book);
-    	Long user_id = (long) session.getAttribute("user_id");
-		model.addAttribute("user", userServ.getUserById(user_id));
-		return "books/showBook.jsp";
+    	if(session.getAttribute("user_id") != null) {	
+			Book book = bookService.findBook(id);
+			model.addAttribute("book", book);
+	    	Long user_id = (long) session.getAttribute("user_id");
+			model.addAttribute("user", userServ.getUserById(user_id));
+			return "books/showBook.jsp";
+	    	
+    	}else {
+	    		return "redirect:/";
+	    	}
 	}
 	
 	@RequestMapping("/books")
 	public String showAllBooks(Model model, HttpSession session) {
+    	if(session.getAttribute("user_id") != null) {
 		List<Book> books = bookService.allBooks();
 		model.addAttribute("books", books);
 		Long user_id = (long) session.getAttribute("user_id");
 		model.addAttribute("user", userServ.getUserById(user_id));
 		return "books/showAll.jsp";
+    	}
+    	else {
+			return "redirect:/";
+		}
 	}
 	@RequestMapping("/books/new")
     public String newBook(@ModelAttribute("book") Book book, Model model, HttpSession session) {
-		Long user_id = (long) session.getAttribute("user_id");
-		model.addAttribute("user", userServ.getUserById(user_id));
-        return "/books/new.jsp";
+    	if(session.getAttribute("user_id") != null) {
+    		Long user_id = (long) session.getAttribute("user_id");
+			model.addAttribute("user", userServ.getUserById(user_id));
+	        return "/books/new.jsp";
+    	}    	else {
+    		return "redirect:/";
+    	}
     }
     @RequestMapping(value="/books", method=RequestMethod.POST)
     public String create(@Valid @ModelAttribute("book") Book book, BindingResult result) {
@@ -63,16 +77,21 @@ public class BookController {
     }
     
     @RequestMapping(value="/books/{id}/edit")
-    public String update(@ModelAttribute("book") Book book, Model model, HttpSession session, @PathVariable("id") long id) {
-		model.addAttribute("oldbook", userServ.getUserById(id));
-       return "books/edit.jsp";
+    public String update(Model model, HttpSession session, @PathVariable("id") long id) {
+    	if(session.getAttribute("user_id") != null) {
+	    	model.addAttribute("oldbook", bookService.findBook(id));
+	    	Book oldbook = bookService.findBook(id);
+    		System.out.printf("\n oldbook: %s \n ", oldbook.getId());
+	       return "books/edit.jsp";
+    	}else {
+    	   return "redirect:/";
+       }
     }
     
     @RequestMapping(value="/books/update", method=RequestMethod.POST)
-    public String update(@Valid @ModelAttribute("book") Book book, BindingResult result) {
+    public String update(@Valid @ModelAttribute("oldbook") Book book, BindingResult result) {
     	if(result.hasErrors()) {
-    		Long id = book.getId();
-    		return String.format("books/%s/edit", id);
+    		return String.format("books/%s/edit", book.getId());
     	} else {
     		bookService.updateBook(book);
     		return "redirect:/books";
